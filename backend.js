@@ -21,15 +21,39 @@ app.get('/*', function (req, res) {
     res.status(200).render('404.jade');
 });
 
-//MongoClient.connect(DB_CONNECTION_STRING, function(err, db) {
-//    var collection = db.collection('CompositeArticle_Agg');
-//
-//    collection.findOne({
-//        _id: 151264
-//    }, function (err, item) {
-//        console.log(item);
-//        db.close();
-//    });
-//});
+app.post('/topic/:id', function (req, res) {
+    MongoClient.connect(DB_CONNECTION_STRING, function(err, db) {
+        var collection;
+
+        if (err) {
+            res.json({
+                error: err.message
+            });
+        } else {
+            collection = db.collection('CompositeArticle_Agg');
+
+            collection.findOne({
+                _id: +req.params.id
+            }, function (err, doc) {
+                if (err) {
+                    res.json({
+                        error: err.message
+                    });
+                } else if (doc) {
+                    res.json({
+                        doc: doc
+                    })
+                } else {
+                    res.json({
+                        error: 'Nothing found'
+                    });
+                }
+
+                db.close();
+            });
+        }
+    });
+});
+
 
 app.listen(3000);

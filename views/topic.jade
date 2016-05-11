@@ -1,1 +1,54 @@
-123
+doctype html
+html(lang="en")
+    head
+        include ./head.jade
+        title='Mediametric API Index'
+    body
+        div(class="panel panel-info")
+            div(class="panel-heading") Topic data
+            div(class="panel-body" id="loader")
+                pre(class="text-center clear-bottom-margin")
+                    span(class="glyphicon glyphicon-refresh spinning text-info" aria-hidden="true")
+                    span &nbsp;
+                    span.text-info Loading...
+            div(class="panel-body" id="error" hidden)
+                pre(class="text-center clear-bottom-margin text-danger" id="errorMessage")
+            div(id="doc" hidden)
+                div(class="panel-body")
+                    pre(class="text-success" id="docMessage")
+                    div(class="panel panel-success clear-bottom-margin")
+                        div(class="panel-heading") Graphics
+                        div(class="panel-body")
+        script(type="text/javascript")
+            :uglify-js
+                (function (window) {
+                    var hideLoader = function () {
+                            window.loader.setAttribute('hidden', 'hidden');
+                        },
+                        errorHandler = function (message) {
+                            hideLoader();
+
+                            window.errorMessage.innerHTML = message || 'Unknown error';
+                            window.error.removeAttribute('hidden');
+                        },
+                        successHandler = function (data) {
+                            hideLoader();
+
+                            window.docMessage.innerHTML = JSON.stringify(data, null, "\t");
+                            window.doc.removeAttribute('hidden');
+                        };
+
+                    window.fetch(window.location.pathname, {
+                        method: 'post'
+                    }).then(function (res) {
+                        res.json().then(function (json) {
+                            if (json.doc) {
+                                successHandler(json.doc);
+                            } else {
+                                errorHandler(json.error);
+                            }
+                        }).catch(function (error) {
+                            errorHandler(error);
+                        });
+                    });
+                })(window);

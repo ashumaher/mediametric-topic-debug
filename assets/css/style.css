@@ -1,3 +1,22 @@
 body {
-    padding: 15px;
+    padding: 20px 20px 0 20px;
+}
+
+pre {
+    max-height: 200px;
+    margin-bottom: 15px;
+}
+
+.clear-bottom-margin {
+    margin-bottom: 0;
+}
+
+.glyphicon.spinning {
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
 }

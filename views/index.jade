@@ -1,0 +1,39 @@
+doctype html
+html(lang="en")
+    head
+        include ./head.jade
+        title='Mediametric API Index'
+    body
+        div(class="panel panel-info")
+            div(class="panel-heading") Enter topic ID
+            div(class="panel-body")
+                div(class="input-group input-group-lg")
+                    span(class="input-group-addon" id="sizing-addon1")
+                        span(class="glyphicon glyphicon-tag" aria-hidden="true")
+                    input(type="text" class="form-control" placeholder="Topic ID" id="topicId" aria-describedby="sizing-addon1")
+                div
+                    p &nbsp;
+                div.text-center
+                    button(class="btn btn-info btn-lg" disabled id="topicIdRedirect") Go!
+        script(type="text/javascript")
+            :uglify-js
+                (function (window) {
+                    var topicIdRedirectDisabledControl = function () {
+                        var topicId = window.topicId.value,
+                            isValidTopicId = +topicId == topicId && topicId > 0;
+
+                        if (isValidTopicId) {
+                            window.topicIdRedirect.removeAttribute('disabled');
+                        } else {
+                            window.topicIdRedirect.setAttribute('disabled', 'disabled');
+                        }
+                    };
+
+                    topicIdRedirectDisabledControl();
+
+                    window.topicId.addEventListener('keyup', topicIdRedirectDisabledControl, false);
+
+                    window.topicIdRedirect.addEventListener('click', function () {
+                        window.location.assign('/topic/' + window.topicId.value);
+                    }, false);
+                })(window);
